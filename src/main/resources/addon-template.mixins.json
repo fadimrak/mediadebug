@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "mine.mod.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "MultiplayerScreenAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

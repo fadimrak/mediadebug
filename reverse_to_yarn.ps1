@@ -1,0 +1,88 @@
+$files = Get-ChildItem "$PSScriptRoot\src\main\java" -Filter *.java -Recurse
+$replacements = @(
+    @('net.minecraft.world.level.block.entity.SpawnerBlockEntity', 'net.minecraft.block.entity.MobSpawnerBlockEntity'),
+    @('net.minecraft.world.level.block.entity.BlockEntity', 'net.minecraft.block.entity.BlockEntity'),
+    @('net.minecraft.world.level.block.Blocks', 'net.minecraft.block.Blocks'),
+    @('net.minecraft.world.level.block', 'net.minecraft.block'),
+    @('net.minecraft.world.item', 'net.minecraft.item'),
+    @('net.minecraft.world.level.ItemLike', 'net.minecraft.item.ItemConvertible'),
+    @('net.minecraft.world.entity.player.Player', 'net.minecraft.entity.player.PlayerEntity'),
+    @('net.minecraft.world.entity.EntityType', 'net.minecraft.entity.EntityType'),
+    @('net.minecraft.world.entity.Entity', 'net.minecraft.entity.Entity'),
+    @('net.minecraft.world.level.chunk.LevelChunkSection', 'net.minecraft.world.chunk.ChunkSection'),
+    @('net.minecraft.world.level.chunk.LevelChunk', 'net.minecraft.world.chunk.WorldChunk'),
+    @('net.minecraft.world.level.chunk', 'net.minecraft.world.chunk'),
+    @('net.minecraft.world.level.Level', 'net.minecraft.world.World'),
+    @('net.minecraft.world.level.LightLayer', 'net.minecraft.world.LightType'),
+    @('net.minecraft.world.level.ChunkPos', 'net.minecraft.util.math.ChunkPos'),
+    @('net.minecraft.core.BlockPos', 'net.minecraft.util.math.BlockPos'),
+    @('net.minecraft.world.phys.Vec3', 'net.minecraft.util.math.Vec3d'),
+    @('net.minecraft.world.phys.AABB', 'net.minecraft.util.math.Box'),
+    @('net.minecraft.network.chat.MutableComponent', 'net.minecraft.text.MutableText'),
+    @('net.minecraft.network.chat.Component', 'net.minecraft.text.Text'),
+    @('net.minecraft.client.gui.screens.multiplayer.ServerSelectionList', 'net.minecraft.client.gui.screen.multiplayer.MultiplayerServerListWidget'),
+    @('net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen', 'net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen'),
+    @('net.minecraft.client.gui.screens.multiplayer', 'net.minecraft.client.gui.screen.multiplayer'),
+    @('net.minecraft.client.gui.components.toasts', 'net.minecraft.client.toast'),
+    @('net.minecraft.client.multiplayer.ClientPacketListener', 'net.minecraft.client.network.ClientPlayNetworkHandler'),
+    @('SpawnerBlockEntity', 'MobSpawnerBlockEntity'),
+    @('Player ', 'PlayerEntity '),
+    @('Player)', 'PlayerEntity)'),
+    @('Player,', 'PlayerEntity,'),
+    @('Level ', 'World '),
+    @('Level)', 'World)'),
+    @('Level,', 'World,'),
+    @('Vec3 ', 'Vec3d '),
+    @('Vec3)', 'Vec3d)'),
+    @('AABB ', 'Box '),
+    @('AABB)', 'Box)'),
+    @('LightLayer', 'LightType'),
+    @('LevelChunkSection', 'ChunkSection'),
+    @('LevelChunk', 'WorldChunk'),
+    @('.blockPosition()', '.getBlockPos()'),
+    @('.tickCount', '.age'),
+    @('.getYRot()', '.getYaw()'),
+    @('.getUUID()', '.getUuid()'),
+    @('.players()', '.getPlayers()'),
+    @('.hasChunk(', '.isChunkLoaded('),
+    @('.getBrightness(', '.getLightLevel('),
+    @('.immutable()', '.toImmutable()'),
+    @('.getMinY()', '.getBottomY()'),
+    @('.getSections()', '.getSectionArray()'),
+    @('.hasOnlyAir()', '.isEmpty()'),
+    @('.getMinBlockX()', '.getStartX()'),
+    @('.getMinBlockZ()', '.getStartZ()'),
+    @('.getMaxBlockX()', '.getEndX()'),
+    @('.getMaxBlockZ()', '.getEndZ()'),
+    @('.x()', '.x'),
+    @('.z()', '.z'),
+    @('getBlockPos()', 'getPos()'),
+    @('.addToast(', '.add('),
+    @('.getDescription()', '.getName()'),
+    @('.withStyle(', '.styled('),
+    @('this.mc.level', 'this.mc.world'),
+    @('withColor', 'withColor'),
+    @('Component.literal', 'Text.literal'),
+    @('Component.empty', 'Text.empty'),
+    @('MutableComponent', 'MutableText'),
+    @('JoinMultiplayerScreen', 'MultiplayerScreen'),
+    @('ServerSelectionList', 'MultiplayerServerListWidget'),
+    @('serverSelectionList', 'serverListWidget'),
+    @('handler.sendChat', 'handler.sendChatMessage'),
+    @('getConnection()', 'getNetworkHandler()'),
+    @('ChunkPos dataPos =', 'BlockPos dataPos ='),
+    @('new ChunkPos(dataPos.getX() >> 4, dataPos.getZ() >> 4)', 'new ChunkPos(dataPos)'),
+    @('new ChunkPos(class_23382.getX() >> 4, class_23382.getZ() >> 4)', 'new ChunkPos(class_23382)')
+)
+
+foreach ($file in $files) {
+    $text = [IO.File]::ReadAllText($file.FullName)
+    $orig = $text
+    foreach ($pair in $replacements) {
+        $text = $text.Replace($pair[0], $pair[1])
+    }
+    if ($text -ne $orig) {
+        [IO.File]::WriteAllText($file.FullName, $text)
+        Write-Host "Yarn: $($file.Name)"
+    }
+}
